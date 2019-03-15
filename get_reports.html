@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>PMAid</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+    <input type="hidden" name="" id="category" value="">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+                <a class="navbar-brand" href="#">PMAid</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="get_projects.html">Projects</a></li>
+                    <li><a href="get_resources.html">Resources</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Log Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li id="toActivity"></li>
+                    <li id="toCashflow"></li>
+                    <li id="toBill"></li>
+                    <li class="active" id="toReports"></li>
+                </ul>
+            </div>
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <div id="project_header" class="page-header"></div>
+
+                <div class="row" style="margin-bottom: 20px">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-10">
+                        <div id="prompt"></div>
+                    </div>
+                </div>
+                <h3>Cashflow Report</h3>
+                <form id="select-date" class="form-inline" role="form">
+                    <div class="form-group">
+                        <label class="control-label" for="categoryform">Month</label>
+                        <select id="monthform" class="form-control" style="width:150px;">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="categoryform">Year</label>
+                        <select id="yearform" class="form-control" style="width:150px;">
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <input type="submit" class="btn btn-default" id="submit">
+                        </div>
+                    </div>
+                </form>
+                </form>
+                <div id="cashflow-container" style="min-width: 310px; height: 400px; margin: 20px auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script>
+        function getUrlVars() {
+            var vars = [],
+                hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+
+        }
+
+        var projectId = getUrlVars()['project_id'];
+        var projectName = getUrlVars()['project_name'];
+        var header = "";
+        var projectName2 = projectName.replace(/%20/g, " ")
+
+        header += "<h2>" + projectName2 + "<small> Reports</small></h2>";
+
+        $('#project_header').html(header);
+        // Set navbar
+        var activity_html = "";
+        var cashflow_html = "";
+        var resources_html = "";
+        var bill_html = "";
+        var reports_html = "";
+
+        activity_html += "<a href=get_activity.html?project_id=" + projectId + "&project_name=" + projectName + ">Gantt Chart</a>";
+        cashflow_html += "<a href=get_cashflow.html?project_id=" + projectId + "&project_name=" + projectName + ">Cashflow</a>";
+        bill_html += "<a href=get_bill_of_materials.html?project_id=" + projectId + "&project_name=" + projectName + ">Bill of Materials</a>";
+        reports_html += "<a href=get_reports.html?project_id=" + projectId + "&project_name=" + projectName + ">Reports</a>";
+
+        $('#toCashflow').html(cashflow_html);
+        $('#toActivity').html(activity_html);
+        $('#toResources').html(resources_html);
+        $('#toBill').html(bill_html);
+        $('#toReports').html(reports_html);
+
+        function selectYears() {
+            $.post('/thesis/api.php', {
+                "api_command": "get_years",
+                "project_id": projectId
+
+            }, function(data, status) {
+
+                var Years = JSON.parse(JSON.parse(data)['success']);
+                var years_options = "";
+
+                for (var i in Years) {
+                    years_options += "<option value=" + Years[i].years + ">" + Years[i].years + " </option>";
+                }
+                $('#yearform').html(years_options);
+            }).done(function() {});
+        }
+
+        selectYears();
+
+        $("#select-date").submit(function(event) {
+            event.preventDefault();
+            $.post('/thesis/api.php', {
+                    "api_command": "get_cashflow_reports",
+                    "year": $('#yearform').val(),
+                    "month": $('#monthform').val(),
+                    "project_id": projectId
+                },
+                function(data, status) {
+                    var Data = JSON.parse(JSON.parse(data)['success']);
+                    var initial_balance = Data.initial_balance;
+                    var expenses = Data.expenses;
+                    var remaining_balance = Data.remaining_balance
+
+                    for (var i in initial_balance) {
+                        initial_balance[i] = parseInt(initial_balance[i]);
+                    }
+
+                    for (var i in expenses) {
+                        expenses[i] = parseInt(expenses[i]);
+                    }
+
+                    for (var i in remaining_balance) {
+                        remaining_balance[i] = parseInt(remaining_balance[i]);
+                    }
+
+                    Highcharts.chart('cashflow-container', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: 'Cashflow'
+                        },
+                        xAxis: {
+                            categories: ['1st week', '2nd week', '3rd week', '4th week']
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: 'Initial Balance',
+                            data: initial_balance
+                        }, {
+                            name: 'Expenses',
+                            data: expenses
+                        }, {
+                            name: 'Remaining Balance',
+                            data: remaining_balance
+                        }]
+                    });
+
+                });
+
+        })
+    </script>
+</body>
+
+</html>
