@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Activities</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">	
+	<link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css">	
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+<input type="hidden" name="" id="to-edit" value="">
+<input type="hidden" name="" id="to-delete" value="">
+<input type="hidden" name="" id="to-add" value="">
+<nav class="navbar navbar-default">
+   <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">PMAid</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="get_projects.html">Projects</a></li>
+        <li class="active" id="toActivity"></li>
+        <li id="toCashflow"></li>
+        <li id="toBill"></li>
+      </ul>
+   </div>
+</nav>
+    <div class="container">
+		<div class="row">
+        <div id="project_header" class="page-header"></div>
+            <h3>Gannt Chart</h3>
+            <div class="gantt"></div>
+            <div class="col-md-1" id="prompt-container" style="margin-bottom: 20px">
+                <button type="button" class="btn btn-success add-btn" data-toggle="modal" data-target="#add-modal">Add Activity</button>
+            </div>
+            <div class="col-md-11">
+                 <div id="prompt"></div>
+            </div>
+		<table class="table table-bordered">
+	    <thead>
+	      <tr>
+            <th class="text-center">Date Added</th>
+            <th class="text-center">Activity</th>
+            <th class="text-center">Date Start</th>
+            <th class="text-center">Date End</th>
+            <th class="text-center">Action</th>
+	      </tr>
+	    </thead>
+	    <tbody id="activity-table-contents">
+	    </tbody>
+	  </table>
+	  </div>
+	</div>
+    <!--Add Modal -->
+    <div id="add-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+
+        <!--Add Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Add Activity</h4>
+          </div>
+          <div class="modal-body" id="content">
+            <form id="add_activity" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="activity">Activity</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="activity">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label class="control-label col-md-2" for="date_start">Date Start</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="date_start">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="date_end">Date End</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="date_end">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" class="btn btn-default" id="submit">
+                    </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+	<!--Edit Modal -->
+	 <div id="edit-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+
+        <!--Edit Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Edit Activiy</h4>
+          </div>
+          <div class="modal-body" id="content">
+            <form id="edit_activity" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit_activity_name">Activity</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="edit_activity_name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit_date_start">Date Start</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="edit_date_start">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit_date_end">Date End</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="edit_date_end">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" class="btn btn-default" id="submit">
+                    </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+	<!--Delete Modal -->
+	<div id="delete-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+	    <!--Delete Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Delete Activity</h4>
+	      </div>
+	      <div class="modal-body">
+		    Are you sure?
+		  </div>
+		  <div class="modal-footer">
+		  	<form id="delete_activity" class="form-inline" role="form">
+			    <button type="submit" data-dismiss="modal" class="btn btn-primary" id="delete">Delete</button>
+			    <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+		    </form>
+		  </div>
+	    </div>
+
+	  </div>
+	</div>
+
+	<script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.fn.gantt.js"></script>
+    <script>
+
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+        
+    }
+    
+    var projectId = getUrlVars()['project_id'];
+    var projectName = getUrlVars()['project_name'];
+    var header = "";
+    var projectName2 = projectName.replace(/%20/g, " ")
+    
+    header += "<h1>"+ projectName2 +"</h1>";
+
+    $('#project_header').html(header);
+    
+    $(document).ready(function() {
+
+
+        // Set navbar
+        var activity_html = ""; 
+        var cashflow_html = "";
+        var resources_html = "";
+        var bill_html = "";
+        
+        activity_html += "<a href=get_activity.html?project_id=" + projectId + "&project_name="+ projectName +">Gantt Chart</a>";
+        cashflow_html += "<a href=get_cashflow.html?project_id=" + projectId + "&project_name="+ projectName +">Cashflow</a>";
+        resources_html += "<a href=get_resources.html?project_id=" + projectId + "&project_name="+ projectName +">Resources</a>";
+        bill_html  += "<a href=get_bill_of_materials.html?project_id=" + projectId + "&project_name="+ projectName +">Bill of Materials</a>";
+
+        $('#toCashflow').html(cashflow_html);
+        $('#toActivity').html(activity_html); 
+        $('#toResources').html(resources_html); 
+        $('#toBill').html(bill_html);   
+
+
+        //funcitons
+        if (typeof projectId == "undefined") {
+            alert("You have no project ID, currently redirecting to projects");
+            window.location.replace("get_projects.html");             
+        }
+
+        $("#date_start").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#date_end").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#edit_date_start").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#edit_date_end").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#delete").click(function(event) {
+            $.post('/thesis/api.php', {
+                    "api_command": "delete_activity",
+                    "id": $('#to-delete').val()
+                },
+                function(data, status) {
+                    console.log($('#to-delete').val());
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            $('#prompt').fadeOut(250, function() {
+                                $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            });
+
+                            $('#delete-modal').modal('hide');
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                        $('#delete-modal').modal('hide');
+                    }
+                }).done(function() {
+                loadActivities();
+            });
+        });
+        $("#edit_activity").submit(function(event) {
+            event.preventDefault();
+            var date_start = $('#edit_date_start').val() + " 00:00:00";
+            var activity = $('#edit_activity_name').val();
+            var date_end = $('#edit_date_end').val() + " 00:00:00";
+
+            $.post('/thesis/api.php', {
+                    "api_command": "update_activity",
+                    "project_id": projectId,
+                    "id": $('#to-edit').val(),
+                    "date_added": "",
+                    "activity": activity,
+                    "date_start": date_start,
+                    "date_end": date_end
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            $('#prompt').fadeOut(250, function() {
+                                $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            });
+                            $('#edit-modal').modal('hide');
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                        $('#edit-modal').modal('hide');
+                    }
+
+                }).done(function() {
+                loadActivities();
+            });
+        });
+
+        $("#add_activity").submit(function(event) {
+            event.preventDefault();
+            var date_start = $('#date_start').val() + " 00:00:00";
+            var activity = $('#activity').val();
+            var date_end = $('#date_end').val() + " 00:00:00";
+
+            $.post('/thesis/api.php', {
+                    "api_command": "add_activity",
+                    "project_id": projectId,
+                    "date_added": "",
+                    "activity": activity,
+                    "date_start": date_start,
+                    "date_end": date_end    
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            // $('#prompt').fadeOut(250, function() {
+                            //     $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            // });
+                            $('#add-modal').modal('hide');
+                            $('#prompt').html(prompt_html);
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success alert-dismissible'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        // $('#prompt').html(prompt_html);
+                        $('#add-project').val("");
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                            $('#add-modal').modal('hide');
+                            $('#project_id').val("");
+                            $('#activity').val("");
+                            $('#date_start').val("");
+                            $('#date_end').val("");
+                    }
+
+                }).done(function() {
+                loadActivities();
+            });
+
+        });
+
+        function bindEdit() {
+            $(".edit-btn").unbind();
+            $(".edit-btn").click(function(event) {
+                var id = $(this).attr("data-id");
+                $('#to-edit').val(id);
+                $.post('/thesis/api.php', {
+                        "api_command": "get_specific_activity",
+                        "id": id 
+                    },
+                    function(data, status) {
+
+                        var Activity = JSON.parse(JSON.parse(data)['success'])
+                    
+                        $("#edit_activity_name").val(Activity.activity);
+                        $('#edit_date_start').val(Activity.date_start);
+                        $('#edit_date_end').val(Activity.date_end);
+
+                    });
+            });
+        }
+
+        function bindDelete() {
+            $(".delete-btn").unbind();
+            $(".delete-btn").click(function(event) {
+                var id = $(this).attr("data-id");
+                $('#to-delete').val(id);
+
+            });
+        }
+
+        function bindAdd() {
+            $(".add-btn").unbind();
+            $(".add-btn").click(function(event) {
+
+            });
+        }
+
+        function selectProject() {
+            $.post('/thesis/api.php', { "api_command": "get_projects" }, function (data, status){
+       
+                var Projects = JSON.parse(JSON.parse(data)['success']);
+                var project_options = "";
+
+                for (var i in Projects) {    
+                    project_options += "<option value=" + Projects[i].id + ">" +    Projects[i].project_name+" </option>";              
+                }               
+                $('#selectform').html(project_options);
+                $('#edit-selectform').html(project_options);
+            }).done(function () {
+                    bindDelete();
+                    bindEdit();
+                    bindAdd();            
+            });
+        }
+
+        function loadActivities() {
+            selectProject();
+            $.post('/thesis/api.php', 
+                {  
+                    "api_command": "get_project_activities",
+                    "project_id": projectId 
+                }, function (data, status) {
+
+            if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+                
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            // $('#prompt').fadeOut(250, function() {
+                            //     $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            // });
+                            $('#add-modal').modal('hide');
+                            $('#prompt').html(prompt_html);
+                        }
+
+                    } else {              
+                        
+                var Activity = JSON.parse(JSON.parse(data)['success']);
+                var activity_html = "";
+                var activity_options = "";
+
+                var gantt_entries = [];
+                var event_entries = [];
+                var gantt_colors = ['','ganttRed','ganttGreen','ganttOrange'];
+                var j = 0;
+
+                for (var i in Activity) {
+                    j++;
+                    if (j==4) {
+                        j = 0;
+                    }
+        
+                    var gantt_entry = {
+                        name: Activity[i].activity,
+                        desc: " ",
+                        values: [{
+                            from: new Date(Activity[i].date_start),
+                            to: new Date(Activity[i].date_end),
+                            label: Activity[i].activity,
+                            customClass: gantt_colors[j],
+                            dataObj: {
+                                name: Activity[i].activity,
+                                start: Activity[i].date_start,
+                                end: Activity[i].date_end 
+                            }
+                        }]   
+                    };
+                    gantt_entries.push(gantt_entry);
+                    
+                    activity_html += "<tr>";
+                    activity_html += "<td class=\"text-center\">" + Activity[i].date_added + "</td>";
+                    activity_html += "<td class=\"text-center\"> <a href=\"get_activity_resources.html?activity_id=" + Activity[i].id + "&project_name="+ Activity[i].project_name + "&project_id="+ projectId +"&activity_name="+ Activity[i].activity + "\"><strong>" + Activity[i].activity + "<strong></a></td>";
+                    activity_html += "<td class=\"text-center\">" + Activity[i].date_start + "</td>";
+                    activity_html += "<td class=\"text-center\">" + Activity[i].date_end + "</td>";
+                    activity_html += "<td class=\"text-center\">";
+                    activity_html += "<button type=\"button\" class=\"btn btn-success edit-btn btn-sm\" data-toggle=\"modal\" data-target=\"#edit-modal\" data-id=" + Activity[i].id + ">Edit</button>";
+                    activity_html += " <button type=\"button\" class=\"btn btn-danger delete-btn btn-sm\" data-toggle=\"modal\" data-target=\"#delete-modal\" data-id=" + Activity[i].id + ">Delete</button>";
+                    activity_html += "</td>";
+                    activity_html += "</tr>";
+                }
+                   
+                    //GANTT CHART
+
+                    $(".gantt").gantt({
+                        source: gantt_entries,
+                        scale: "days",
+                        maxScale: "months",
+                        minScale: "hours",
+                        navigate: "scroll",
+                        onItemClick: function(data) {
+                        }
+                    });
+
+                    $('#activity-table-contents').html(activity_html);
+                }
+                   }).done(function() {
+                            bindDelete();
+                            bindEdit();
+                            bindAdd();
+
+                        });
+            }
+            loadActivities();
+    });
+</script>
+</body>
+</html>

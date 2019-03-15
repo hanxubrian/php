@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Cashflow</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">	
+	<link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css">	
+	<link rel="stylesheet" type="text/css" href="css/style.css">    
+</head>
+<body>
+<input type="hidden" name="" id="to-edit" value="">
+<input type="hidden" name="" id="to-delete" value="">
+<input type="hidden" name="" id="to-add" value="">
+<nav class="navbar navbar-default">
+   <div class="container-fluid">
+      <div class="navbar-header">
+         <a class="navbar-brand" href="#">PMAid</a>
+      </div>
+       <ul class="nav navbar-nav">
+         <li><a href="get_projects.html">Projects</a></li>
+         <li id="toActivity"></li>
+         <li class="active" id="toCashflow"></li>
+         <li id="toBill"></li>
+      </ul>
+   </div>
+</nav>
+    <div class="container">
+		<div class="row">
+        <div id="project_header" class="page-header"></div>
+        <div class="row">
+            <div class="col-md-1" id="prompt-container">
+                <button type="button" class="btn btn-success add-btn" data-toggle="modal" data-target="#add-modal">Transact</button>
+            </div>
+            <div class="col-md-3 alert alert-info" id="prompt-container">
+               <div id="balance"></div>
+            </div>
+            <div class="col-md-7">
+                 <div id="prompt"></div>
+            </div>
+        </div>
+		<table class="table table-bordered ">
+	    <thead>
+	      <tr>
+	        <th class="text-center">Transaction Type</th>
+            <th class="text-center">Amount</th>
+            <th class="text-center">Description</th>
+            <th class="text-center">Date Added</th>
+            <th class="text-center">Transaction Date</th>
+            <th class="text-center">Action</th>
+	      </tr>
+	    </thead>
+	    <tbody id="cashflow-table-contents">
+	    </tbody>
+	  </table>
+	  </div>
+	</div>
+    <!--Add Modal -->
+    <div id="add-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+
+        <!--Add Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Add Bill</h4>
+          </div>
+          <div class="modal-body" id="content">
+            <form id="add_cashflow" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="category">Cashflow</label>
+                    <div class="col-md-10">
+                    <select id="add-selectform" class="form-control">
+                        <option value="IN">CASH IN</option>
+                        <option value="OUT">CASH OUT</option>    
+                    </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="amount">Amount</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="amount">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="description">Description</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="description">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="transaction_date">Transaction Date</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="transaction_date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" class="btn btn-default" id="submit">
+                    </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+	<!--Edit Modal -->
+	 <div id="edit-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+
+        <!--Edit Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Edit Bill</h4>
+          </div>
+          <div class="modal-body" id="content">
+            <form id="edit_cashflow" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="category">Cashflow</label>
+                    <div class="col-md-10">
+                    <select id="edit_selectform" class="form-control">
+                        <option value="in">CASH IN</option>
+                        <option value="out">CASH OUT</option>    
+                    </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit_amount">Amount</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="edit_amount">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit_description">Description</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="edit_description">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit_transaction_date">Transaction Date</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="edit_transaction_date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" class="btn btn-default" id="submit">
+                    </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+	<!--Delete Modal -->
+	<div id="delete-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+	    <!--Delete Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Delete Bill</h4>
+	      </div>
+	      <div class="modal-body">
+		    Are you sure?
+		  </div>
+		  <div class="modal-footer">
+		  	<form id="delete_transaction" class="form-inline" role="form">
+			    <button type="submit" data-dismiss="modal" class="btn btn-primary" id="delete">Delete</button>
+			    <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+		    </form>
+		  </div>
+	    </div>
+
+	  </div>
+	</div>
+
+	<script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+    <script>
+
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+    
+    var projectId = getUrlVars()['project_id'];
+    var projectName = getUrlVars()['project_name'];
+    var header = "";
+    var projectName2 = projectName.replace(/%20/g, " ")
+    
+    header += "<h1>"+ projectName2 +"</h1>";
+
+    $('#project_header').html(header);
+    
+
+    $(document).ready(function() {
+
+        // Set navbar
+        var activity_html = ""; 
+        var cashflow_html = "";
+        var resources_html = "";
+        var bill_html = "";
+
+        activity_html += "<a href=get_activity.html?project_id=" + projectId + "&project_name="+ projectName +">Gantt Chart</a>";
+        cashflow_html += "<a href=get_cashflow.html?project_id=" + projectId + "&project_name="+ projectName +">Cashflow</a>";
+        bill_html  += "<a href=get_bill_of_materials.html?project_id=" + projectId + "&project_name="+ projectName +">Bill of Materials</a>";
+
+        $('#toCashflow').html(cashflow_html);
+        $('#toActivity').html(activity_html); 
+        $('#toResources').html(resources_html); 
+        $('#toBill').html(bill_html);   
+
+
+        //funcitons
+        $("#date_added").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#transaction_date").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#edit_date_added").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#edit_transaction_date").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#delete").click(function(event) {
+            $.post('/thesis/api.php', {
+                    "api_command": "delete_transaction",
+                    "id": $('#to-delete').val()
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            $('#prompt').fadeOut(250, function() {
+                                $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            });
+
+                            $('#delete-modal').modal('hide');
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                        $('#delete-modal').modal('hide');
+                    }
+                }).done(function() {
+                loadCashflow();
+            });
+        });
+        $("#edit_cashflow").submit(function(event) {
+            event.preventDefault();
+            var category = $('#edit_selectform').val();
+            var amount = $('#edit_amount').val();
+            var description = $('#edit_description').val();
+            var date_added = $('#edit_date_added').val() + " 00:00:00";
+            var transaction_date = $('#edit_transaction_date').val() + " 00:00:00";
+
+            $.post('/thesis/api.php', {
+                    "api_command": "update_transaction",
+                    "id": $('#to-edit').val(),
+                    "type": category,
+                    "amount": amount,
+                    "description": description,
+                    "date_added": date_added,
+                    "transaction_date": transaction_date
+                },
+                function(data, status) {
+                    console.log(date_added);
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            $('#prompt').fadeOut(250, function() {
+                                $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            });
+                            $('#edit-modal').modal('hide');
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                        $('#edit-modal').modal('hide');
+                    }
+
+                }).done(function() {
+                loadCashflow();
+            });
+        });
+
+        $("#add_cashflow").submit(function(event) {
+            event.preventDefault();
+            var category = $('#add-selectform').val();
+            var amount = $('#amount').val();
+            var transaction_date = $('#transaction_date').val() + " 00:00:00";
+            var description = $('#description').val();
+            $.post('/thesis/api.php', {
+                    "api_command": "transact_cash",
+                    "type": category,
+                    "amount": amount,
+                    "description": description,
+                    "date_added": "",
+                    "transaction_date": transaction_date,
+                    "project_id": projectId
+                },
+                function(data, status) {
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+                
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            // $('#prompt').fadeOut(250, function() {
+                            //     $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            // });
+                            $('#add-modal').modal('hide');
+                            $('#prompt').html(prompt_html);
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success alert-dismissible'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        // $('#prompt').html(prompt_html);
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                            $('#add-modal').modal('hide');
+                            $('#amount').val("");
+                            $('#date_added').val("");
+                            $('#transaction_date').val("");
+                    }
+
+                }).done(function() {
+                loadCashflow();
+            });
+
+        });
+
+        function bindEdit() {
+            $(".edit-btn").unbind();
+            $(".edit-btn").click(function(event) {
+                var id = $(this).attr("data-id");
+                $('#to-edit').val(id);
+                $.post('/thesis/api.php', {
+                        "api_command": "get_specific_cashflow",
+                        "id": id 
+                    },
+                    function(data, status) {
+                        console.log(data);
+                        var Cashflow = JSON.parse(JSON.parse(data)['success'])                                             
+                        $("#edit_selectform").val(Cashflow.type);
+                        $("#edit_amount").val(Cashflow.amount);
+                        $('#edit_description').val(Cashflow.description);
+                        $('#edit_date_added').val(Cashflow.date_added);
+                        $('#edit_transaction_date').val(Cashflow.transaction_date);
+                    });
+            });
+        }
+
+        function bindDelete() {
+            $(".delete-btn").unbind();
+            $(".delete-btn").click(function(event) {
+                var id = $(this).attr("data-id");
+                $('#to-delete').val(id);
+
+            });
+        }
+
+        function bindAdd() {
+            $(".add-btn").unbind();
+            $(".add-btn").click(function(event) {
+
+            });
+        }
+
+        function getBalance() {
+            $.post('/thesis/api.php', 
+                {
+                 "api_command": "get_project_sum_cashflow",
+                 "project_id": projectId
+                },
+
+            function (data, status) {
+
+            var Balance = JSON.parse(JSON.parse(data)['success']);
+            var balance_html = "";           
+
+            balance_html += "<strong><p>Remaining Balance: " + Balance.balance + "</p></strong>";
+            
+            $('#balance').html(balance_html);
+
+            });        
+        }
+
+        function loadCashflow() {
+            $.post('/thesis/api.php', 
+                {
+                    "api_command": "get_project_cashflow",
+                    "project_id": projectId
+                },
+
+            function (data, status) {
+
+            if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+                
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            // $('#prompt').fadeOut(250, function() {
+                            //     $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            // });
+                            $('#add-modal').modal('hide');
+                            $('#prompt').html(prompt_html);
+                        }
+
+                    } else {
+
+                            var Cashflow = JSON.parse(JSON.parse(data)['success']);
+                            var cashflow_html = "";
+
+                            for (var i in Cashflow) {
+                                cashflow_html += "<tr>";
+                                cashflow_html += "<td class=\"text-center\"><p style=\"text-transform: uppercase;\">" + Cashflow[i].type + "</p></td>";
+                                cashflow_html += "<td class=\"text-center\">" + Cashflow[i].amount + "</td>";
+                                cashflow_html += "<td class=\"text-center\">" + Cashflow[i].description + "</td>";
+                                cashflow_html += "<td class=\"text-center\">" + Cashflow[i].date_added + "</td>";
+                                cashflow_html += "<td class=\"text-center\">" + Cashflow[i].transaction_date + "</td>";
+                                cashflow_html += "<td class=\"text-center\">";
+                                cashflow_html += "<button type=\"button\" class=\"btn btn-success edit-btn\" data-toggle=\"modal\" data-target=\"#edit-modal\" data-id=" + Cashflow[i].id + ">Edit</button>";
+                                cashflow_html += " <button type=\"button\" class=\"btn btn-danger delete-btn\" data-toggle=\"modal\" data-target=\"#delete-modal\" data-id=" + Cashflow[i].id + ">Delete</button>";
+                                cashflow_html += "</td>";
+                                cashflow_html += "</tr>";
+                            }
+                                $('#cashflow-table-contents').html(cashflow_html);
+                            }
+
+               }).done(function() {
+                        bindDelete();
+                        bindEdit();
+                        bindAdd();
+                        getBalance();
+                    });
+        }
+        loadCashflow();
+    });
+</script>
+</body>
+</html>

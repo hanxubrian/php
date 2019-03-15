@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Activity Resources</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">	
+	<link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css">	
+	<link rel="stylesheet" type="text/css" href="css/style.css">    
+</head>
+<body>
+<input type="hidden" name="" id="to-edit" value="">
+<input type="hidden" name="" id="to-delete" value="">
+<input type="hidden" name="" id="to-add" value="">
+<nav class="navbar navbar-default">
+   <div class="container-fluid">
+      <div class="navbar-header">
+         <a class="navbar-brand" href="#">PMAid</a>
+      </div>
+       <ul class="nav navbar-nav">
+         <li><a href="get_projects.html">Projects</a></li>
+         <li id="toActivity"></li>
+         <li class="active" id="toResources"></li>
+      </ul>
+   </div>
+</nav>
+    <div class="container">
+		<div class="row">
+        <div id="activity_header" class="page-header"></div>
+		<div class="row">
+            <div class="col-md-2" id="prompt-container">
+                <button type="button" class="btn btn-success add-btn" data-toggle="modal" data-target="#add-modal">Add Resource</button>
+            </div>
+            <div class="col-md-10">
+                 <div id="prompt">  
+            </div>
+            </div>
+        </div>
+        <table class="table table-bordered">
+	    <thead>
+	      <tr>
+            <th class="text-center">Resource</th>
+            <th class="text-center">Type</th>
+            <th class="text-center">Quantity</th>
+            <th class="text-center">Duration</th>
+            <th class="text-center">Rate</th>
+            <th class="text-center">Total</th>
+            <th class="text-center">Action</th>
+	      </tr>
+	    </thead>
+	    <tbody id="resoureces-table-contents">
+	    </tbody>
+	  </table>
+	  </div>
+	</div>
+    <!--Add Modal -->
+    <div id="add-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+
+        <!--Add Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Add Resource</h4>
+          </div>
+          <div class="modal-body" id="content">
+            <form id="add_resource" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="selectform">Resource Name</label>
+                    <select id="selectform" class="form-control" style="width:450px; margin-left: 164px;"></select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="quantity">Quantity</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="quantity">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="duration">Duration</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="duration">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="rate">Rate</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="rate">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" class="btn btn-default" id="submit">
+                    </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+	<!--Edit Modal -->
+	 <div id="edit-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+
+        <!--Edit Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Edit Resource</h4>
+          </div>
+          <div class="modal-body" id="content">
+            <form id="edit_resource" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="selectform">Resource Name</label>
+                    <select id="edit-selectform" class="form-control" style="width:450px; margin-left: 164px;"></select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit-quantity">Quantity</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="edit-quantity">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit-duration">Duration</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="edit-duration">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit-rate">Rate</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="edit-rate">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" class="btn btn-default" id="submit">
+                    </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+	<!--Delete Modal -->
+	<div id="delete-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+	    <!--Delete Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Delete Resource</h4>
+	      </div>
+	      <div class="modal-body">
+		    Are you sure?
+		  </div>
+		  <div class="modal-footer">
+		  	<form id="delete_resource" class="form-inline" role="form">
+			    <button type="submit" data-dismiss="modal" class="btn btn-primary" id="delete">Delete</button>
+			    <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+		    </form>
+		  </div>
+	    </div>
+
+	  </div>
+	</div>
+
+	<script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+    <script>
+
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+    
+    var activityId = getUrlVars()['activity_id']; 
+    var activityName = getUrlVars()['activity_name'];
+    var projectId = getUrlVars()['project_id'];
+    var projectName = getUrlVars()['project_name'];
+    var header = "";
+    var activityName2 = activityName.replace(/%20/g, " ")
+    
+    header += "<h1>"+ activityName2 +"</h1>";
+
+    $('#activity_header').html(header);
+    
+
+    $(document).ready(function() {
+
+        // Set navbar
+        var activity_html = ""; 
+        var resources_html = "";
+               
+        activity_html += "<a href=get_activity.html?project_id=" + projectId + "&project_name="+ projectName +">Gantt Chart</a>";
+        resources_html += "<a href=get_activity_resources.html?project_id=" + projectId + "&activity_id="+ activityId +"&activity_name="+ activityName +">Activity Resources</a>";
+     
+        $('#toActivity').html(activity_html); 
+        $('#toResources').html(resources_html); 
+
+            $("#delete").click(function(event) {
+            $.post('/thesis/api.php', {
+                    "api_command": "delete_activity_resources",
+                    "id": $('#to-delete').val()
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            $('#prompt').fadeOut(250, function() {
+                                $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            });
+
+                            $('#delete-modal').modal('hide');
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                        $('#delete-modal').modal('hide');
+                    }
+                }).done(function() {
+                loadActivityRsources();
+            });
+        });
+        $("#edit_resource").submit(function(event) {
+            event.preventDefault();
+            var quantity = $('#edit-quantity').val();
+            var duration = $('#edit-duration').val();
+            var rate = $('#edit-rate').val();
+            var resource_id = $('#edit-selectform').val();
+
+            $.post('/thesis/api.php', {
+                    "api_command": "edit_activity_resources",
+                    "id": $('#to-edit').val(),
+                    "gantt_chart_id": activityId,
+                    "resource_id": resource_id,
+                    "quantity": quantity,
+                    "duration": duration,
+                    "rate": rate
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            $('#prompt').fadeOut(250, function() {
+                                $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            });
+                            $('#edit-modal').modal('hide');
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                        $('#edit-modal').modal('hide');
+                    }
+
+                }).done(function() {
+                loadActivityRsources();
+            });
+        });
+
+        $("#add_resource").submit(function(event) {
+            event.preventDefault();
+            var quantity = $('#quantity').val();
+            var duration = $('#duration').val();
+            var rate = $('#rate').val();
+            var resource_id = $('#selectform').val();
+
+            $.post('/thesis/api.php', {
+                    "api_command": "add_activity_resources",
+                    "gantt_chart_id": activityId,
+                    "resource_id": resource_id,
+                    "quantity": quantity,
+                    "duration": duration,
+                    "rate": rate
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            // $('#prompt').fadeOut(250, function() {
+                            //     $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            // });
+                            $('#add-modal').modal('hide');
+                            $('#prompt').html(prompt_html);
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success alert-dismissible'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        // $('#prompt').html(prompt_html);
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                            $('#add-modal').modal('hide');
+                            $('#duration').val("");
+                            $('#rate').val("");
+                            $('#quantity').val("");
+                    }
+
+                }).done(function() {
+                loadActivityRsources();
+            });
+
+        });
+
+        function bindEdit() {
+            $(".edit-btn").unbind();
+            $(".edit-btn").click(function(event) {
+                var id = $(this).attr("data-id");
+                $('#to-edit').val(id);
+                $.post('/thesis/api.php', {
+                        "api_command": "get_specific_activity_resources",
+                        "id": id 
+                    },
+                    function(data, status) {
+                        var Resource = JSON.parse(JSON.parse(data)['success'])                       
+                        $('#edit-quantity').val(Resource.quantity);
+                        $('#edit-duration').val(Resource.duration);
+                        $('#edit-rate').val(Resource.rate);
+                        $('#edit-selectform').val(Resource.resource_id);                    
+                    });
+            });
+        }
+
+        function bindDelete() {
+            $(".delete-btn").unbind();
+            $(".delete-btn").click(function(event) {
+                var id = $(this).attr("data-id");
+                $('#to-delete').val(id);
+
+            });
+        }
+
+        function bindAdd() {
+            $(".add-btn").unbind();
+            $(".add-btn").click(function(event) {
+
+            });
+        }
+
+         function selectResources() {
+            $.post('/thesis/api.php', { "api_command": "get_resources" }, function (data, status){
+       
+                var Resources = JSON.parse(JSON.parse(data)['success']);
+                var resources_options = "";
+
+                for (var i in Resources) {    
+                    resources_options += "<option value=" + Resources[i].id + ">" +    Resources[i].name+" </option>";              
+                }               
+                $('#selectform').html(resources_options);
+                $('#edit-selectform').html(resources_options);
+            }).done(function () {
+                    bindDelete();
+                    bindEdit();
+                    bindAdd();            
+            });
+        }
+
+        function loadActivityRsources() {
+            selectResources();
+            $.post('/thesis/api.php', 
+                {
+                 "api_command": "get_activity_resources",
+                 "gantt_chart_id": activityId
+                },
+
+            function (data, status) {
+            if (typeof JSON.parse(data)['errors'] !== "undefined") {    
+
+                   var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+                
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            // $('#prompt').fadeOut(250, function() {
+                            //     $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            // });
+                            $('#add-modal').modal('hide');
+                            $('#prompt').html(prompt_html);
+                        }
+
+                    } else {
+
+            var Resources = JSON.parse(JSON.parse(data)['success']);
+            var resources_html = "";
+           
+            for (var i in Resources) {
+                resources_html += "<tr>";
+                resources_html += "<td class=\"text-center\">" + Resources[i].name + "</td>";
+                resources_html += "<td class=\"text-center\">" + Resources[i].category + "</td>";
+                resources_html += "<td class=\"text-center\">" + Resources[i].quantity + "</td>";
+                resources_html += "<td class=\"text-center\">" + Resources[i].duration + "</td>";
+                resources_html += "<td class=\"text-center\">" + Resources[i].rate + "</td>";
+                resources_html += "<td class=\"text-center\">" + Resources[i].total + "</td>";
+                resources_html += "<td class=\"text-center\">";
+                resources_html += "<button type=\"button\" class=\"btn btn-success edit-btn\" data-toggle=\"modal\" data-target=\"#edit-modal\" data-id=" + Resources[i].id + ">Edit</button>";
+                resources_html += " <button type=\"button\" class=\"btn btn-danger delete-btn\" data-toggle=\"modal\" data-target=\"#delete-modal\" data-id=" + Resources[i].id + ">Delete</button>";
+                resources_html += "</td>";
+                resources_html += "</tr>";
+            }
+                $('#resoureces-table-contents').html(resources_html);
+            }
+
+               }).done(function() {
+                        bindDelete();
+                        bindEdit();
+                        bindAdd();
+
+                    });
+        }
+        loadActivityRsources();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Bill of Materials</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">	
+	<link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css">	
+	<link rel="stylesheet" type="text/css" href="css/style.css">    
+</head>
+<body>
+<input type="hidden" name="" id="to-edit" value="">
+<input type="hidden" name="" id="to-delete" value="">
+<input type="hidden" name="" id="to-add" value="">
+<input type="hidden" name="" id="to-pay" value="">
+<input type="hidden" name="" id="to-pay-value" value="">
+<nav class="navbar navbar-default">
+   <div class="container-fluid">
+      <div class="navbar-header">
+         <a class="navbar-brand" href="#">PMAid</a>
+      </div>
+       <ul class="nav navbar-nav">
+         <li><a href="get_projects.html">Projects</a></li>
+         <li id="toActivity"></li>
+         <li id="toCashflow"></li>
+         <li class="active" id="toBill"></li>
+      </ul>
+   </div>
+</nav>
+    <div class="container">
+		<div class="row">
+        <div id="project_header" class="page-header"></div>
+		<div class="row">
+            <div class="col-md-2" id="prompt-container">
+                <button type="button" class="btn btn-success add-btn" data-toggle="modal" data-target="#add-modal">Add Bill of Material</button>
+            </div>
+            <div class="col-md-10">
+                 <div id="prompt">  
+            </div>
+            </div>
+        </div>
+        <table class="table table-bordered">
+	    <thead>
+	      <tr>
+            <th class="text-center">Item</th>
+            <th class="text-center">Quantity</th>
+            <th class="text-center">Amount</th>
+            <th class="text-center">Total</th>
+            <th class="text-center">Action</th>
+	      </tr>
+	    </thead>
+	    <tbody id="billofmaterials-table-contents">
+	    </tbody>
+	  </table>
+	  </div>
+	</div>
+    <!--Add Modal -->
+    <div id="add-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+
+        <!--Add Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Add Bill</h4>
+          </div>
+          <div class="modal-body" id="content">
+            <form id="add_bill" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="item">Item</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="item">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="quantity">Quantity</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="quantity">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="amount">Amount</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="amount">
+                    </div>
+                </div>
+                <!-- <div class="form-group">
+                    <label class="control-label col-md-2" for="total">Total</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="total">
+                    </div>
+                </div> -->
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" class="btn btn-default" id="submit">
+                    </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+	<!--Edit Modal -->
+	 <div id="edit-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+
+        <!--Edit Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Edit Bill</h4>
+          </div>
+          <div class="modal-body" id="content">
+            <form id="edit_bill_of_material" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit-item">Item</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="edit-item">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit-quantity">Quantity</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="edit-quantity">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit-amount">Amount</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="edit-amount">
+                    </div>
+                </div>
+                <!-- <div class="form-group">
+                    <label class="control-label col-md-2" for="total">Total</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="total">
+                    </div>
+                </div> -->
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" class="btn btn-default" id="submit">
+                    </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+	<!--Delete Modal -->
+	<div id="delete-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+	    <!--Delete Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Delete Bill</h4>
+	      </div>
+	      <div class="modal-body">
+		    Are you sure?
+		  </div>
+		  <div class="modal-footer">
+		  	<form id="delete_bill" class="form-inline" role="form">
+			    <button type="submit" data-dismiss="modal" class="btn btn-primary" id="delete">Delete</button>
+			    <button type="button" data-dismiss="modal" class="btn btn-default">Cancel</button>
+		    </form>
+		  </div>
+	    </div>
+
+	  </div>
+	</div>
+
+
+    <!--Pay Modal -->
+    <div id="pay-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!--Pay Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Pay Bill</h4>
+          </div>
+          <div class="modal-body">
+            Are you sure?
+          </div>
+          <div class="modal-footer">
+            <form id="pay_bill" class="form-inline" role="form">
+                <button type="submit" data-dismiss="modal" class="btn btn-primary" id="pay">Pay</button>
+                <button type="button" data-dismiss="modal" class="btn btn-defaul">Cancel</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+	<script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+    <script>
+
+    function getUrlVars()
+    {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+    
+    var projectId = getUrlVars()['project_id']; 
+    var projectName = getUrlVars()['project_name'];
+    var header = "";
+    var projectName2 = projectName.replace(/%20/g, " ");
+    
+    header += "<h1>"+ projectName2 +"</h1>";
+
+    $('#project_header').html(header);
+    
+
+    $(document).ready(function() {
+
+        // Set navbar
+        var activity_html = ""; 
+        var cashflow_html = "";
+        var resources_html = "";
+        var bill_html = "";
+        
+        activity_html += "<a href=get_activity.html?project_id=" + projectId + "&project_name="+ projectName +">Gantt Chart</a>";
+        cashflow_html += "<a href=get_cashflow.html?project_id=" + projectId + "&project_name="+ projectName +">Cashflow</a>";
+        resources_html += "<a href=get_resources.html?project_id=" + projectId + "&project_name="+ projectName +">Resources</a>";
+        bill_html  += "<a href=get_bill_of_materials.html?project_id=" + projectId + "&project_name="+ projectName +">Bill of Materials</a>";
+
+        $('#toCashflow').html(cashflow_html);
+        $('#toActivity').html(activity_html); 
+        $('#toResources').html(resources_html); 
+        $('#toBill').html(bill_html);   
+
+
+
+
+
+            $("#delete").click(function(event) {
+            event.preventDefault();
+            $.post('/thesis/api.php', {
+                    "api_command": "delete_bill_of_material",
+                    "id": $('#to-delete').val()
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            $('#prompt').fadeOut(250, function() {
+                                $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            });
+
+                            $('#delete-modal').modal('hide');
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                        $('#delete-modal').modal('hide');
+                    }
+                }).done(function() {
+                loadBillofMaterials();
+            });
+        });
+
+        $("#edit_bill_of_material").submit(function(event) {
+            event.preventDefault();
+            var item = $('#edit-item').val();
+            var amount = $('#edit-amount').val();
+            var quantity = $('#edit-quantity').val();
+
+            $.post('/thesis/api.php', {
+                    "api_command": "edit_bill_of_material",
+                    "id": $('#to-edit').val(),
+                    "project_id":projectId,
+                    "item": item,
+                    "quantity":  quantity,
+                    "amount": amount,
+                    "total": ""
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            $('#prompt').fadeOut(250, function() {
+                                $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            });
+                            $('#edit-modal').modal('hide');
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                        $('#edit-modal').modal('hide');
+                    }
+
+                }).done(function() {
+                loadBillofMaterials();
+            });
+        });
+
+        $("#add_bill").submit(function(event) {
+            event.preventDefault();
+            var item = $('#item').val();
+            var amount = $('#amount').val();
+            var quantity = $('#quantity').val();
+
+            $.post('/thesis/api.php', {
+                    "api_command": "add_bill_of_material",
+                    "project_id": projectId,
+                    "item": item,
+                    "quantity": quantity,
+                    "amount": amount,
+                    "total": ""   
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            // $('#prompt').fadeOut(250, function() {
+                            //     $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            // });
+                            $('#add-modal').modal('hide');
+                            $('#prompt').html(prompt_html);
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success alert-dismissible'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        // $('#prompt').html(prompt_html);
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                            $('#add-modal').modal('hide');
+                            $('#item').val("");
+                            $('#amount').val("");
+                            $('#quantity').val("");
+                    }
+
+                }).done(function() {
+                loadBillofMaterials();
+            });
+
+        });
+        $("#pay_bill").submit(function(event) {
+            event.preventDefault();
+            console.log("hello");
+            console.log($('#to-pay').val());
+            $('#to-pay').val();
+            $('#to-pay-value').val();
+            $.post('/thesis/api.php', {
+                    "api_command": "pay_bill",
+                    "amount": amount,
+                    "project_id": projectId
+                },
+                function(data, status) {
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+                
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            // $('#prompt').fadeOut(250, function() {
+                            //     $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            // });
+                            $('#add-modal').modal('hide');
+                            $('#prompt').html(prompt_html);
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success alert-dismissible'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        // $('#prompt').html(prompt_html);
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                            $('#add-modal').modal('hide');
+                    }
+
+                }).done(function() {
+                loadCashflow();
+            });
+
+        });
+
+        function bindEdit() {
+            $(".edit-btn").unbind();
+            $(".edit-btn").click(function(event) {
+                var id = $(this).attr("data-id");
+                $('#to-edit').val(id);
+                $.post('/thesis/api.php', {
+                        "api_command": "get_specific_bill_of_materials",
+                        "id": id 
+                    },
+                    function(data, status) {
+                        var Bill = JSON.parse(JSON.parse(data)['success'])                       
+                        $("#edit-item").val(Bill.item);
+                        $('#edit-amount').val(Bill.amount);
+                        $('#edit-quantity').val(Bill.quantity);
+                    });
+            });
+        }
+
+        function bindDelete() {
+            $(".delete-btn").unbind();
+            $(".delete-btn").click(function(event) {
+                var id = $(this).attr("data-id");
+                $('#to-delete').val(id);
+
+            });
+        }
+
+        function bindPay() {
+            $(".pay-btn").unbind();
+            $(".pay-btn").click(function(event) {
+                var id = $(this).attr("data-id");
+                var value = $(this).attr("data-value")
+                $('#to-pay').val(id);
+                $('#to-pay-value').val(value);
+            });
+        }
+
+        function bindAdd() {
+            $(".add-btn").unbind();
+            $(".add-btn").click(function(event) {
+            });
+        }
+
+
+        function loadBillofMaterials() {
+            $.post('/thesis/api.php', 
+                {
+                 "api_command": "get_project_bill_of_materials",
+                 "project_id": projectId
+                },
+
+            function (data, status) {
+
+            if (typeof JSON.parse(data)['errors'] !== "undefined") {    
+
+                   var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+                
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            // $('#prompt').fadeOut(250, function() {
+                            //     $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            // });
+                            $('#add-modal').modal('hide');
+                            $('#prompt').html(prompt_html);
+                        }
+
+                    } else {
+
+            var Bill = JSON.parse(JSON.parse(data)['success']);
+            var bill_of_materials_html = "";
+           
+            for (var i in Bill) {
+                bill_of_materials_html += "<tr>";
+                bill_of_materials_html += "<td class=\"text-center\">" + Bill[i].item + "</td>";
+                bill_of_materials_html += "<td class=\"text-center\">" + Bill[i].quantity + "</td>";
+                bill_of_materials_html += "<td class=\"text-center\">" + Bill[i].amount + "</td>";
+                bill_of_materials_html += "<td class=\"text-center\">" + Bill[i].total + "</td>";
+                bill_of_materials_html += "<td class=\"text-center\">";
+                bill_of_materials_html += "<button type=\"button\" class=\"btn btn-success edit-btn\" data-toggle=\"modal\" data-target=\"#edit-modal\" data-id=" + Bill[i].id + ">Edit</button>";
+                bill_of_materials_html += " <button type=\"button\" class=\"btn btn-danger delete-btn\" data-toggle=\"modal\" data-target=\"#delete-modal\" data-id=" + Bill[i].id + ">Delete</button>";
+
+                if (true) {
+                    bill_of_materials_html += " <button type=\"button\" class=\"btn btn-default pay-btn\" data-toggle=\"modal\" data-target=\"#pay-modal\" data-value=" + Bill[i].total + " \"data-id=" + Bill[i].id + ">Pay</button>"
+                    ;}
+
+                bill_of_materials_html += "</td>";
+                bill_of_materials_html += "</tr>";
+            }
+                $('#billofmaterials-table-contents').html(bill_of_materials_html);
+            }
+
+               }).done(function() {
+                        bindDelete();
+                        bindEdit();
+                        bindAdd();
+
+                    });
+        }
+        loadBillofMaterials();
+    });
+</script>
+</body>
+</html>

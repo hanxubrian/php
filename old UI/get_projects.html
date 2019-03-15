@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Projects</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">	
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css">	
+    <link rel="stylesheet" href="css/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+<input type="hidden" name="" id="to-edit" value="">
+<input type="hidden" name="" id="to-delete" value="">
+<input type="hidden" name="" id="to-add" value="">
+<nav class="navbar navbar-default">
+   <div class="container-fluid">
+      <div class="navbar-header">
+         <a class="navbar-brand" href="#">PMAid</a>
+      </div>
+      <ul class="nav navbar-nav">
+     	 <li class="active"><a href="get_projects.html">Projects</a></li>
+      </ul>
+   </div>
+</nav>
+	<div class="container">
+		<div class="row">
+        <div class="page-header"><h1>Projects</h1></div>
+        <div class="row">
+            <div class="col-md-2">
+            <button type="submit" class="btn btn-success add-btn" data-toggle="modal" data-target="#add-modal">Add Project</button>
+            </div>  
+            <div class="col-md-10">
+                 <div id="prompt"></div>
+            </div>  
+        </div>
+		<table class="table table-bordered">
+	    <thead>
+	      <tr>
+	        <th>Project Name</th>
+	        <th class="text-center">Date Added</th>
+            <th class="text-center">Date Start</th>
+            <th class="text-center">Duration</th>
+            <th class="text-center">Date End</th>
+	        <th class="text-center">Action</th>
+	      </tr>
+	    </thead>
+	    <tbody id="projects-table-contents">
+	    </tbody>
+	  </table>
+	  </div>
+	</div>
+
+    <!--Add Modal -->
+    <div id="add-modal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!--Add Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Add Project</h4>
+          </div>
+          <div class="modal-body" id="content">
+            <form id="add_project" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="add_project_name">Name</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="add_project_name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="project_date_start">Date Start</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="project_date_start">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="project_duration">Duration</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="project_duration">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="project_date_end">Date End</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="project_date_end">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" class="btn btn-default" id="submit">
+                    </div>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+	<!--Edit Modal -->
+	<div id="edit-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+	    <!--Edit Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Edit Project</h4>
+	      </div>
+	      <div class="modal-body" id="content">
+	      	<form id="edit_project" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit_project_name">Name</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="edit_project_name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit_project_date_start">Date Start</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="edit_project_date_start">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit_project_duration">Duration</label>
+                    <div class="col-md-10">
+                    <input type="number" class="form-control" id="edit_project_duration">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="edit_project_date_end">Date End</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control" id="edit_project_date_end">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" class="btn btn-default" id="submit">
+                    </div>
+                </div>
+            </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
+
+	<!--Delete Modal -->
+	<div id="delete-modal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+	    <!--Delete Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Delete Project</h4>
+	      </div>
+	      <div class="modal-body">
+		    Are you sure?
+		  </div>
+		  <div class="modal-footer">
+		  	<form id="delete_project" class="form-inline" role="form">
+			    <button type="submit" data-dismiss="modal" class="btn btn-primary" id="delete">Delete</button>
+			    <button type="button" data-dismiss="modal" class="btn btn-defaul">Cancel</button>
+		    </form>
+		  </div>
+	    </div>
+
+	  </div>
+	</div>
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script>
+    $(document).ready(function() {
+        $("#project_date_start").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#project_date_end").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#edit_project_date_start").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#edit_project_date_end").datepicker({dateFormat: 'yy-mm-dd' });
+        $("#delete").click(function(event) {
+            $.post('/thesis/api.php', {
+                    "api_command": "delete_project",
+                    "id": $('#to-delete').val()
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            $('#prompt').fadeOut(250, function() {
+                                $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            });
+                            $('#delete-modal').modal('hide');
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                        $('#delete-modal').modal('hide');
+                    }
+                }).done(function() {
+                loadProjects();
+
+            });
+        });
+        $("#edit_project").submit(function(event) {
+            event.preventDefault();
+            var name = $('#edit_project_name').val();
+            var date_start = $('#edit_project_date_start').val();
+            var duration = $('#edit_project_duration').val();
+            var date_end = $('#edit_project_date_end').val();
+
+            $.post('/thesis/api.php', {
+                    "api_command": "update_project",
+                    "id": $('#to-edit').val(),
+                    "project_name": name,
+                    "date_start": date_start,
+                    "duration": duration,
+                    "date_end": date_end
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            $('#prompt').fadeOut(250, function() {
+                                $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            });
+                            $('#edit-modal').modal('hide');
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                        $('#edit-modal').modal('hide');
+                    }
+
+                }).done(function() {
+                loadProjects();
+            });
+        });
+
+        $("#add_project").submit(function(event) {
+            event.preventDefault();
+            var name = $('#add_project_name').val();
+            var date_start = $('#project_date_start').val();
+            var duration = $('#project_duration').val();
+            var date_end = $('#project_date_end').val();
+
+            $.post('/thesis/api.php', {
+                    "api_command": "add_project",
+                    "project_name": name,
+                    "date_start": date_start,
+                    "duration": duration,
+                    "date_end": date_end
+                },
+                function(data, status) {
+
+                    if (typeof JSON.parse(data)['errors'] !== "undefined") {
+
+                        var error = JSON.parse(data)['errors'];
+                        var prompt_html = "";
+
+                        for (var i in error) {
+                            prompt_html += "<div id='prompt' class='alert alert-danger'>"
+                            prompt_html += "<strong>" + error[i] + "</strong>";
+                            prompt_html += "</div>"
+
+                            $('#prompt').fadeOut(250, function() {
+                                $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                            });
+                            $('#add-modal').modal('hide');
+                        }
+
+                    } else {
+
+                        var success = JSON.parse(data)['success'];
+                        var prompt_html = "";
+
+                        prompt_html += "<div id='prompt' class='alert alert-success'>"
+                        prompt_html += "<strong>" + success.replace(/"/g, "") + "</strong>";
+                        prompt_html += "</div>"
+
+                        // $('#prompt').html(prompt_html);
+                        $('#add-project').val("");
+
+                        $('#prompt').fadeOut(250, function() {
+                            $('#prompt').empty().html(prompt_html).fadeIn().delay(1500).fadeOut("slow");;
+                        });
+                        $('#add-modal').modal('hide');    
+                    }
+
+                }).done(function() {
+                loadProjects();
+            });
+
+        });
+
+        function bindEdit() {
+            $(".edit-btn").unbind();
+            $(".edit-btn").click(function(event) {
+                var id = $(this).attr("data-id");
+                $('#to-edit').val(id);
+
+                $.post('/thesis/api.php', {
+                        "api_command": "get_specific_project",
+                        "id": id
+                    },
+                    function(data, status) {
+
+                        var Projects = JSON.parse(JSON.parse(data)['success'])
+
+                        $("#edit_project_name").val(Projects.project_name);
+                        $("#edit_project_date_start").val(Projects.date_start);
+                        $("#edit_project_duration").val(Projects.duration);
+                        $("#edit_project_date_end").val(Projects.date_end);
+                    });
+            });
+        }
+
+        function bindDelete() {
+            $(".delete-btn").unbind();
+            $(".delete-btn").click(function(event) {
+                var id = $(this).attr("data-id");
+                $('#to-delete').val(id);
+
+            });
+        }
+
+        function bindAdd() {
+            $(".add-btn").unbind();
+            $(".add-btn").click(function(event) {
+            });
+        }
+
+        function loadProjects() {
+            $.post('/thesis/api.php', {
+                "api_command": "get_projects"
+            }, function(data, status) {
+                
+                var Projects = JSON.parse(JSON.parse(data)['success']);
+            
+                var projects_html = "";
+
+                for (var i in Projects) {
+                	// var date = new Date(Projects[i].date_added);
+                    projects_html += "<tr>";
+                    projects_html += "<td> <a href=\"get_activity.html?project_id=" + Projects[i].id + "&project_name="+ Projects[i].project_name +"\"class=\"get-activity\" data-id=" + Projects[i].id + "><strong>" + Projects[i].project_name + "<strong></a></td>";
+                    projects_html += "<td class=\"text-center\">" + Projects[i].date_added + "</td>";
+                    projects_html += "<td class=\"text-center\">" + Projects[i].date_start + "</td>";
+                    projects_html += "<td class=\"text-center\">" + Projects[i].duration + "</td>";
+                    projects_html += "<td class=\"text-center\">" + Projects[i].date_end + "</td>";
+                    projects_html += "<td class=\"text-center\">";
+                    projects_html += "<button type=\"button\" class=\"btn btn-success edit-btn\" data-toggle=\"modal\" data-target=\"#edit-modal\" data-id=" + Projects[i].id + ">Edit</button>";
+                    projects_html += " <button type=\"button\" class=\"btn btn-danger delete-btn\" data-toggle=\"modal\" data-target=\"#delete-modal\" data-id=" + Projects[i].id + ">Delete</button>";
+                    projects_html += "</td>";
+                    projects_html += "</tr>";
+                }
+
+                $('#projects-table-contents').html(projects_html);
+
+
+            }).done(function() {
+                bindDelete();
+                bindEdit();
+                bindAdd();
+
+            });
+        }
+        loadProjects();
+    });
+</script>
+</body>
+</html>
